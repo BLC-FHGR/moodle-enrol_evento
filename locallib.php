@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/enrol/locallib.php');
  * Name of the user info field for the eventoid
  */
 define('ENROL_EVENTO_UIF_EVENTOID', 'eventoid');
-definde('ENROL_EVENTO_UIF_COVIDCERT', 'covidcert');
+define('ENROL_EVENTO_UIF_COVIDCERT', 'covidcert');
 
 
 /**
