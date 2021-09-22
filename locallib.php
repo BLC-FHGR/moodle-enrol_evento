@@ -31,6 +31,7 @@ require_once($CFG->dirroot . '/enrol/locallib.php');
  * Name of the user info field for the eventoid
  */
 define('ENROL_EVENTO_UIF_EVENTOID', 'eventoid');
+definde('ENROL_EVENTO_UIF_COVIDCERT', 'covidcert');
 
 
 /**
@@ -451,6 +452,10 @@ class enrol_evento_user_sync{
             $u = $this->get_user_by_username($shibbolethid);
             if (isset($u)) {
                 $this->set_user_eventoid($u->id, $eventopersonid);
+                //Update Covidcert field
+                $person = $this->eventoservice->get_person_by_id($eventopersonid);
+                $this->set_user_covidcert($u->id, $person->person_Zusatz6);
+
             }
         }
 
@@ -484,6 +489,8 @@ class enrol_evento_user_sync{
             $usernew->id = user_create_user($usernew, false, false);
 
             $this->set_user_eventoid($usernew->id, $eventopersonid);
+            //Add covidcert info
+            $this->set_user_covidcert($usernew->id, $person->person_Zusatz6);
             $u = $DB->get_record('user', array('id' => $usernew->id));
             debugging("user created with username: {$usernew->username}", DEBUG_DEVELOPER);
         }
@@ -598,6 +605,60 @@ class enrol_evento_user_sync{
                 $item->userid = $userid;
                 $item->fieldid = $uifid;
                 $item->data = (string)$eventoid;
+                $item->dataformat = 0;
+
+                $uiditem = $DB->insert_record('user_info_data', $item);
+                if ($uiditem) {
+                    $returnvalue = true;
+                }
+            }
+        }
+        return $returnvalue;
+    }
+
+        /**
+     * Sets or inserts the user defined field covidstat, if it exists.
+     *
+     * @param int $userid
+     * @param string $covidcert
+     * @return bool true if set successfully
+     */
+    protected function set_user_covidcert($userid, $covidcert) {
+        global $DB;
+
+        $returnvalue = false;
+
+        // Gets an existing user info data covidcert.
+        $sql = 'SELECT uid.id
+            FROM {user_info_data} uid
+            INNER JOIN {user_info_field} uif ON uid.fieldid = uif.id
+            WHERE uif.shortname = :covidcert
+            AND uid.userid = :userid';
+
+        $sqlparams = array('covidcert' => ENROL_EVENTO_UIF_COVIDCERT, 'userid' => $userid);
+
+        $uid = $DB->get_field_sql($sql, $sqlparams);
+
+        if ($uid) {
+            // Update.
+            $returnvalue = $DB->set_field('user_info_data', 'data', $covidcert, array('id' => $uid));
+        } else {
+            // Insert.
+            // Gets an existing user info field for covidcert.
+            $sql = 'SELECT uif.id
+                FROM {user_info_field} uif
+                WHERE uif.shortname = :covidcert';
+
+            $sqlparams = array('covidcert' => ENROL_EVENTO_UIF_COVIDCERT);
+
+            $uifid = $DB->get_field_sql($sql, $sqlparams);
+
+            if ($uifid) {
+                // Inserts new user_info_data item.
+                $item = new \stdClass();
+                $item->userid = $userid;
+                $item->fieldid = $uifid;
+                $item->data = (string)$covicert;
                 $item->dataformat = 0;
 
                 $uiditem = $DB->insert_record('user_info_data', $item);
