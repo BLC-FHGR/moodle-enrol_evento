@@ -443,6 +443,10 @@ class enrol_evento_user_sync{
                 $shibbolethid = $this->eventoservice->sid_to_shibbolethid($aduser->objectSid);
                 if ($u->username != $shibbolethid) {
                     $u = null; // not the same useraccount
+                } else {
+                    //Update Covidcert field
+                    $person = $this->eventoservice->get_person_by_id($eventopersonid);
+                    $this->set_user_covidcert($u->id, $person->person_Zusatz6);
                 }
             }
         }
