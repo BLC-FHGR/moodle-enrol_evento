@@ -632,6 +632,10 @@ class enrol_evento_user_sync{
         global $DB;
 
         $returnvalue = false;
+        //check if covidcert is null
+        if (is_null($covidcert)){
+            return $returnvalue;
+        }
 
         // Gets an existing user info data covidcert.
         $sql = 'SELECT uid.id
