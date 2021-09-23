@@ -382,6 +382,7 @@ class enrol_evento_user_sync{
         if (empty($this->allactiveadaccounts)) {
             $this->allactiveadaccounts = $this->eventoservice->get_all_ad_accounts(true);
         }
+        if ($eventopersonid == 144080){ $isstudent=false;} //ONLY FOR TEST
         // Filter ad-users.
         if (isset($eventopersonid)) {
             // Filter personid.
