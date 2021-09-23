@@ -382,7 +382,7 @@ class enrol_evento_user_sync{
         if (empty($this->allactiveadaccounts)) {
             $this->allactiveadaccounts = $this->eventoservice->get_all_ad_accounts(true);
         }
-        
+
         // Filter ad-users.
         if (isset($eventopersonid)) {
             // Filter personid.
@@ -634,6 +634,8 @@ class enrol_evento_user_sync{
         $returnvalue = false;
         //check if covidcert is null
         if (is_null($covidcert)){
+            return $returnvalue;
+        }elseif (strtotime($covidcert)==false){ //avoid non date data from evento
             return $returnvalue;
         }
 
