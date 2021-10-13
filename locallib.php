@@ -637,7 +637,7 @@ class enrol_evento_user_sync{
 
         $returnvalue = false;
         //check if covidtest is null
-        if (is_null($covidtest)){
+        if (is_null($covidtest) || strlen($covidtest)<1){
             return $returnvalue;
         }elseif (strtotime($covidtest)==false){ //avoid non date data from evento
             return $returnvalue;
@@ -697,7 +697,7 @@ class enrol_evento_user_sync{
 
         $returnvalue = false;
         //check if covidcert is null
-        if (is_null($covidcert)){
+        if (is_null($covidcert) || strlen($covidcert)<1){
             return $returnvalue;
         }elseif (strtotime($covidcert)==false){ //avoid non date data from evento
             return $returnvalue;
