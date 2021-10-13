@@ -88,5 +88,33 @@ function xmldb_enrol_evento_install() {
         $profiledef->define_save($item);
     }
 
+    // Check if user definied field exists (COVID CERT)
+    $uifidcert = $DB->get_records('user_info_field', array('shortname' => ENROL_EVENTO_UIF_COVIDTEST));
+
+    if (empty($uifidcert)) {
+        // Inserts new user_info_data item.
+        $item = new \stdClass();
+        $item->shortname = ENROL_EVENTO_UIF_COVIDTEST;
+        $item->name = "Covid Test";
+        $item->datatype = 'text';
+        $item->description = "<p>Covid Test info</p>";
+        $item->descriptionformat = FORMAT_HTML;
+        $item->categoryid = 1;
+        $item->required = 0;
+        $item->locked = 1;
+        $item->visible = 0;
+        $item->forceunique = 0;
+        $item->signup = 0;
+        $item->defaultdata = '';
+        $item->defaultdataformat = FORMAT_MOODLE;
+        $item->param1 = 30;
+        $item->param2 = 2048;
+        $item->param3 = 0;
+        $item->param4 = '';
+        $item->param5 = '';
+
+        $profiledef = new profile_define_base();
+        $profiledef->define_save($item);
+    }
     return true;
 }

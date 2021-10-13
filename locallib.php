@@ -32,6 +32,7 @@ require_once($CFG->dirroot . '/enrol/locallib.php');
  */
 define('ENROL_EVENTO_UIF_EVENTOID', 'eventoid');
 define('ENROL_EVENTO_UIF_COVIDCERT', 'covidcert');
+define('ENROL_EVENTO_UIF_COVIDTEST', 'covidtest');
 
 
 /**
@@ -444,8 +445,9 @@ class enrol_evento_user_sync{
                 if ($u->username != $shibbolethid) {
                     $u = null; // not the same useraccount
                 } else {
-                    //Update Covidcert field
+                    //Update Covid fields
                     $person = $this->eventoservice->get_person_by_id($eventopersonid);
+                    $this->set_user_covidtest($u->id, $person->person_Zusatz5);
                     $this->set_user_covidcert($u->id, $person->person_Zusatz6);
                 }
             }
@@ -457,8 +459,9 @@ class enrol_evento_user_sync{
             $u = $this->get_user_by_username($shibbolethid);
             if (isset($u)) {
                 $this->set_user_eventoid($u->id, $eventopersonid);
-                //Update Covidcert field
+                //Update Covid fields
                 $person = $this->eventoservice->get_person_by_id($eventopersonid);
+                $this->set_user_covidtest($u->id, $person->person_Zusatz5);
                 $this->set_user_covidcert($u->id, $person->person_Zusatz6);
 
             }
@@ -494,7 +497,8 @@ class enrol_evento_user_sync{
             $usernew->id = user_create_user($usernew, false, false);
 
             $this->set_user_eventoid($usernew->id, $eventopersonid);
-            //Add covidcert info
+            //Add covid fields
+            $this->set_user_covidtest($usernew->id, $person->person_Zusatz5);
             $this->set_user_covidcert($usernew->id, $person->person_Zusatz6);
             $u = $DB->get_record('user', array('id' => $usernew->id));
             debugging("user created with username: {$usernew->username}", DEBUG_DEVELOPER);
@@ -621,7 +625,67 @@ class enrol_evento_user_sync{
         return $returnvalue;
     }
 
-        /**
+    /**
+     * Sets or inserts the user defined field covid test, if it exists.
+     *
+     * @param int $userid
+     * @param string $covidtest
+     * @return bool true if set successfully
+     */
+    protected function set_user_covidtest($userid, $covidtest) {
+        global $DB;
+
+        $returnvalue = false;
+        //check if covidtest is null
+        if (is_null($covidtest)){
+            return $returnvalue;
+        }elseif (strtotime($covidtest)==false){ //avoid non date data from evento
+            return $returnvalue;
+        }
+
+        // Gets an existing user info data covidtest.
+        $sql = 'SELECT uid.id
+            FROM {user_info_data} uid
+            INNER JOIN {user_info_field} uif ON uid.fieldid = uif.id
+            WHERE uif.shortname = :covidtest
+            AND uid.userid = :userid';
+
+        $sqlparams = array('covidtest' => ENROL_EVENTO_UIF_COVIDTEST, 'userid' => $userid);
+
+        $uid = $DB->get_field_sql($sql, $sqlparams);
+
+        if ($uid) {
+            // Update.
+            $returnvalue = $DB->set_field('user_info_data', 'data', $covidtest, array('id' => $uid));
+        } else {
+            // Insert.
+            // Gets an existing user info field for covidtest.
+            $sql = 'SELECT uif.id
+                FROM {user_info_field} uif
+                WHERE uif.shortname = :covidtest';
+
+            $sqlparams = array('covidtest' => ENROL_EVENTO_UIF_COVIDTEST);
+
+            $uifid = $DB->get_field_sql($sql, $sqlparams);
+
+            if ($uifid) {
+                // Inserts new user_info_data item.
+                $item = new \stdClass();
+                $item->userid = $userid;
+                $item->fieldid = $uifid;
+                $item->data = (string)$covitest;
+                $item->dataformat = 0;
+
+                $uiditem = $DB->insert_record('user_info_data', $item);
+                if ($uiditem) {
+                    $returnvalue = true;
+                }
+            }
+        }
+        return $returnvalue;
+    }
+
+    /**
      * Sets or inserts the user defined field covidstat, if it exists.
      *
      * @param int $userid
