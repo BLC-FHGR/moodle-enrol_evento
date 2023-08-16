@@ -326,14 +326,14 @@ class enrol_evento_user_sync{
         } catch (Exeption $ex) {
             debugging("Error: ". $ex->getMessage());
             $this->trace->output('...user enrolment synchronisation aborted unexpected');
-            $this->trace->output('...end');
-            $this->trace->output('{$ex}');
-            $this->trace->output('...end');
             $this->trace->finished();
             return 1;
         } catch (Throwable $ex) {
             debugging("Error: ". $ex->getMessage());
             $this->trace->output('...user enrolment synchronisation aborted unexpected');
+            $this->trace->output('...end');
+            $this->trace->output('{$ex}');
+            $this->trace->output('...end');
             $this->trace->finished();
             return 1;
         }
