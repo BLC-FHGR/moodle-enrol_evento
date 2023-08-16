@@ -171,7 +171,6 @@ class enrol_evento_user_sync{
                     // Array of ids of active enrolled users.
                     $this->entolledusersids = array();
 
-                    /*
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
@@ -185,86 +184,14 @@ class enrol_evento_user_sync{
                     }
 
                     // Get event participants enrolments.
-                    $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
-                    //$enrolments = to_array($enrolments);
-                    */
-                    
-                    
-                    //not working
-                    print_r ("----- not workind start -----\n");
-                    $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
-                    if (empty($event)) {
-                        debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
-                        continue;
-                    } elseif (count($event)>1 && !array_key_exists("anlassNummer", $event)){
-                        //Remove the incorrect event entries, if there are multiple events.
-                        foreach ($event as $key => $singleevent){
-                            if($anlassnbr != $singleevent["anlassNummer"]) { 
-                                unset($event[$key]);
-                            }
-                        }
-                        $event = array_pop($event);
-                    }
-
-                    // Get event participants enrolments.
-                    $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
-                    $enrolments = to_array($enrolments);
-                    $ev2 = $event;
-                    $en2 = $enrolments;
-                    print_r ("----- not workind end -----\n");
-                    //end not working
-
-                    //working
-                    print_r ("----- workind start -----\n");
-                    $event = $this->eventoservice->get_event_by_number($anlassnbr);
-                    if (empty($event)) {
-                        debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
-                        continue;
-                    } elseif (count($event)>1){
-                        //Remove the incorrect event entries, if there are multiple events.
-                        foreach ($event as $key => $singleevent){
-                            if($anlassnbr != $singleevent->anlassNummer) { 
-                                unset($event[$key]);
-                            }
-                        }
-                        $event = array_pop($event);
-                    }
-
-                    // Get event participants enrolments.
+                    //$enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event->idAnlass);
-                    $enrolments = to_array($enrolments);
-                    $ev1 = $event;
-                    $en1 = $enrolments;
-                    print_r ("----- workind end -----\n");
-                    //end working
-
-                    //compare
-                    if ($ev1 != $ev2)
-                    {
-                        print_r ("event is not the same\n");
-                        print_r ("working start:\n");
-                        print_r ($ev1);
-                        print_r ("working end:\n");
-                        print_r ("not working start:\n");
-                        print_r ($ev2);
-                        print_r ("not working end:\n");
-                    }
-                    if ($en1 != $en2)
-                    {
-                        print_r ("enrolments are not the same\n");
-                        print_r ("working start:\n");
-                        print_r ($en1);
-                        print_r ("working end:\n");
-                        print_r ("not working start:\n");
-                        print_r ($en2);
-                        print_r ("not working end:\n");
-                    }
-                    
-
-                    //skip everything for debugging purpose
-                    //continue;
+                    print_r ($enrolments);
+                    //$enrolments = to_array($enrolments);
                     
                     
+                    continue;
+                                        
                     // Enrol students.
                     foreach ($enrolments as $ee) {
                         try {
