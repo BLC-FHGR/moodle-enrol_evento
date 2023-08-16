@@ -175,7 +175,7 @@ class enrol_evento_user_sync{
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
                         continue;
-                    } elseif (count($event)>1){
+                    } elseif (count($event)>1 && !array_key_exists("anlassNummer", $event)){
                         //Remove the incorrect event entries, if there are multiple events.
                         foreach ($event as $key => $singleevent){
                             if($anlassnbr != $singleevent["anlassNummer"]){ unset($event[$key]); }
