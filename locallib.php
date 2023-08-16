@@ -176,14 +176,16 @@ class enrol_evento_user_sync{
                     //working
                     print_r ("----- workind start -----");
                     $event = $this->eventoservice->get_event_by_number($anlassnbr);
-                    print_r ($event);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
                         continue;
                     } elseif (count($event)>1){
                         //Remove the incorrect event entries, if there are multiple events.
                         foreach ($event as $key => $singleevent){
-                            if($anlassnbr != $singleevent->anlassNummer){ unset($event[$key]); }
+                            if($anlassnbr != $singleevent->anlassNummer) { 
+                                unset($event[$key]);
+                                print_r ($event[$key]);
+                            }
                         }
                         $event = array_pop($event);
                     }
@@ -217,14 +219,16 @@ class enrol_evento_user_sync{
                     //not working
                     print_r ("----- not workind start -----");
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
-                    print_r ($event);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
                         continue;
                     } elseif (count($event)>1 && !array_key_exists("anlassNummer", $event)){
                         //Remove the incorrect event entries, if there are multiple events.
                         foreach ($event as $key => $singleevent){
-                            if($anlassnbr != $singleevent["anlassNummer"]){ unset($event[$key]); }
+                            if($anlassnbr != $singleevent["anlassNummer"]) { 
+                                unset($event[$key]);
+                                print_r ($event[$key]);
+                            }
                         }
                         $event = array_pop($event);
                     }
