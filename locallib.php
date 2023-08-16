@@ -176,6 +176,7 @@ class enrol_evento_user_sync{
                     //working
                     print_r ("----- workind start -----");
                     $event = $this->eventoservice->get_event_by_number($anlassnbr);
+                    print_r ($event);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
                         continue;
@@ -190,7 +191,6 @@ class enrol_evento_user_sync{
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event->idAnlass);
                     $enrolments = to_array($enrolments);
-                    print_r ($enrolments);
                     print_r ("----- workind end -----");
                     //end working
                     
@@ -217,6 +217,7 @@ class enrol_evento_user_sync{
                     //not working
                     print_r ("----- not workind start -----");
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
+                    print_r ($event);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
                         continue;
@@ -231,7 +232,6 @@ class enrol_evento_user_sync{
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
                     $enrolments = to_array($enrolments);
-                    print_r ($enrolments);
                     print_r ("----- not workind end -----");
                     //end not working
 
