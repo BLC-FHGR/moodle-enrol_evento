@@ -146,7 +146,9 @@ class enrol_evento_user_sync{
                     $instance = $instances[$ce->id];
 
                     //only sync following 3 courses testing
-                    if ($ce->courseid != 14148 || $ce->courseid != 14281 || $ce->courseid != 5467) {
+                    if ($ce->courseid == 14148 || $ce->courseid == 14281 || $ce->courseid == 5467) {
+                        //do nothing
+                    } else {
                         continue;
                     }
 
