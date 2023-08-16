@@ -172,8 +172,9 @@ class enrol_evento_user_sync{
                     $this->entolledusersids = array();
 
 
-                    /*
+                    
                     //working
+                    print_r ("----- workind start -----");
                     $event = $this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
@@ -189,9 +190,12 @@ class enrol_evento_user_sync{
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event->idAnlass);
                     $enrolments = to_array($enrolments);
+                    print_r ($enrolments);
+                    print_r ("----- workind end -----");
                     //end working
-                    */
                     
+
+                    /*
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
@@ -207,9 +211,12 @@ class enrol_evento_user_sync{
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
                     //$enrolments = to_array($enrolments);
+                    */
                     
-                    /*
+                    
                     //not working
+                    print_r ("----- not workind start -----");
+                    print_r ($enrolments);
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
@@ -225,8 +232,10 @@ class enrol_evento_user_sync{
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
                     $enrolments = to_array($enrolments);
+                    print_r ($enrolments);
+                    print_r ("----- not workind end -----");
                     //end not working
-                    */
+                    
                     
                     // Enrol students.
                     foreach ($enrolments as $ee) {
