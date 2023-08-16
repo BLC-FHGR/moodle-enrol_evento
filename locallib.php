@@ -174,7 +174,7 @@ class enrol_evento_user_sync{
 
                     
                     //working
-                    print_r ("----- workind start -----");
+                    print_r ("----- workind start -----\n");
                     $event = $this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
@@ -187,13 +187,13 @@ class enrol_evento_user_sync{
                             }
                         }
                         $event = array_pop($event);
+                        print_r ("pop");
                     }
-                    print_r ($event);
 
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event->idAnlass);
                     $enrolments = to_array($enrolments);
-                    print_r ("----- workind end -----");
+                    print_r ("----- workind end -----\n");
                     //end working
                     
 
@@ -217,7 +217,7 @@ class enrol_evento_user_sync{
                     
                     
                     //not working
-                    print_r ("----- not workind start -----");
+                    print_r ("----- not workind start -----\n");
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
@@ -230,13 +230,13 @@ class enrol_evento_user_sync{
                             }
                         }
                         $event = array_pop($event);
+                        print_r ("pop");
                     }
-                    print_r ($event);
 
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
                     $enrolments = to_array($enrolments);
-                    print_r ("----- not workind end -----");
+                    print_r ("----- not workind end -----\n");
                     //end not working
 
                     //skip everything for debugging purpose
