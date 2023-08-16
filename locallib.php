@@ -216,7 +216,7 @@ class enrol_evento_user_sync{
                     */
                     
                     
-                    //not working
+                    /*//not working
                     print_r ("----- not workind start -----\n");
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
@@ -237,10 +237,10 @@ class enrol_evento_user_sync{
                     print_r ($enrolments);
                     $enrolments = to_array($enrolments);
                     print_r ("----- not workind end -----\n");
-                    //end not working
+                    //end not working*/
 
                     //skip everything for debugging purpose
-                    continue;
+                    //continue;
                     
                     
                     // Enrol students.
