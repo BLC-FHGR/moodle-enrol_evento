@@ -145,6 +145,11 @@ class enrol_evento_user_sync{
                     }
                     $instance = $instances[$ce->id];
 
+                    //only sync following 3 courses testing
+                    if ($ce->courseid != 14148 || $ce->courseid != 14281 || $ce->courseid != 5467) {
+                        continue;
+                    }
+
                     // Get event id and data.
                     if (empty($instance->customtext1)) {
                         $anlassnbr = trim($ce->idnumber);
