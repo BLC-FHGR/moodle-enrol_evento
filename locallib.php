@@ -208,8 +208,8 @@ class enrol_evento_user_sync{
 
                     // Enrol teachers.
                     $eventteachers = array();
-                    if (isset($event->array_EventoAnlassLeitung)) {
-                        $eventteachers = to_array($event->array_EventoAnlassLeitung);
+                    if (isset($event["array_EventoAnlassLeitung"])) {	
+                        $eventteachers = to_array($event["array_EventoAnlassLeitung"]);
                     }
                     // Enrol teachers allowed?
                     if ($instance->customint1 == 1 || is_null($instance->customint1)) {
@@ -276,10 +276,10 @@ class enrol_evento_user_sync{
                                                         . " with userid: {$enrolleduser->userid}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
                                 }
                             }
-                        } else {
-                            debugging("not processing suspending, because no evento enrolments gotten for evento.idAnlass: {$event->idAnlass}; courseid: {$ce->courseid}");
-                            $this->trace->output("...not processing suspending, because no evento enrollments gotten for"
-                                            . " evento.idAnlass: {$event->idAnlass}; courseid: {$ce->courseid}");
+                        } else {	
+                            debugging("not processing suspending, because no evento enrolments gotten for evento.idAnlass: {$event["idAnlass"]}; courseid: {$ce->courseid}");	
+                            $this->trace->output("...not processing suspending, because no evento enrollments gotten for"	
+                                            . " evento.idAnlass: {$event["idAnlass"]}; courseid: {$ce->courseid}");	
                         }
                     }
 
