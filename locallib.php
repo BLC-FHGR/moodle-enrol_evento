@@ -184,11 +184,11 @@ class enrol_evento_user_sync{
                         foreach ($event as $key => $singleevent){
                             if($anlassnbr != $singleevent->anlassNummer) { 
                                 unset($event[$key]);
-                                print_r ($event[$key]);
                             }
                         }
                         $event = array_pop($event);
                     }
+                    print_r ($event);
 
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event->idAnlass);
@@ -227,11 +227,11 @@ class enrol_evento_user_sync{
                         foreach ($event as $key => $singleevent){
                             if($anlassnbr != $singleevent["anlassNummer"]) { 
                                 unset($event[$key]);
-                                print_r ($event[$key]);
                             }
                         }
                         $event = array_pop($event);
                     }
+                    print_r ($event);
 
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
