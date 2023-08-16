@@ -191,8 +191,8 @@ class enrol_evento_user_sync{
 
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event->idAnlass);
-                    $enrolments = to_array($enrolments);
                     print_r ($enrolments);
+                    $enrolments = to_array($enrolments);
                     print_r ("----- workind end -----\n");
                     //end working
                     
@@ -234,8 +234,8 @@ class enrol_evento_user_sync{
 
                     // Get event participants enrolments.
                     $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
-                    $enrolments = to_array($enrolments);
                     print_r ($enrolments);
+                    $enrolments = to_array($enrolments);
                     print_r ("----- not workind end -----\n");
                     //end not working
 
