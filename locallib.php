@@ -216,7 +216,6 @@ class enrol_evento_user_sync{
                     
                     //not working
                     print_r ("----- not workind start -----");
-                    print_r ($enrolments);
                     $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
@@ -235,6 +234,9 @@ class enrol_evento_user_sync{
                     print_r ($enrolments);
                     print_r ("----- not workind end -----");
                     //end not working
+
+                    //skip everything for debugging purpose
+                    continue;
                     
                     
                     // Enrol students.
