@@ -194,15 +194,15 @@ class enrol_evento_user_sync{
                                 return 1;
                             }
                         } catch (Exception $ex) {
-                            debugging("Enrolment sync of user evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                            debugging("Enrolment sync of user (student) evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                     . " aborted with error: ". $ex->getMessage());
-                            $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                            $this->trace->output("...user (student) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                         } catch (Throwable $ex) {
-                            debugging("Enrolment sync of user evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                            debugging("Enrolment sync of user (student) evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                     . " aborted with error: ". $ex->getMessage());
-                            $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                            $this->trace->output("...user (student) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                         }
                     }
 
@@ -226,15 +226,15 @@ class enrol_evento_user_sync{
                                     return 1;
                                 }
                             } catch (Exception $ex) {
-                                debugging("Enrolemnt sync of user evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                                debugging("Enrolemnt sync of user (teacher) evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                         . " aborted with error: ". $ex->getMessage());
-                                $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                                $this->trace->output("...user (teacher) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                             } catch (Throwable $ex) {
-                                debugging("Enrolemnt sync of user evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                                debugging("Enrolemnt sync of user (teacher) evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                         . " aborted with error: ". $ex->getMessage());
-                                $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                                $this->trace->output("...user (teacher) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                             }
                         }
                     }
