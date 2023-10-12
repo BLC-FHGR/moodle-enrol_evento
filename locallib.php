@@ -99,6 +99,17 @@ class enrol_evento_user_sync{
                 return 2;
             }
 
+            // Check if the setting for single course execution is active
+            // Evento Settings
+            if ($this->config->taskmodify) {
+                $courseid = $this->config->taskmodifier;
+                $this->trace->output('!!!Warning you chose in the evento settings to sync only the course with the id: ' . $courseid . '!!!');
+                if (!$DB->record_exists("course", ["id" => $courseid])) {
+                    $this->trace->output('No course with id: ' . $courseid . ' found...');
+                    return 2;
+                }
+            }
+
             // Unfortunately this may take a long time, execution can be interrupted safely here.
             core_php_time_limit::raise();
             raise_memory_limit(MEMORY_HUGE);
