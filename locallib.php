@@ -55,6 +55,8 @@ class enrol_evento_user_sync{
     protected $timeend;
     // array of enrolled user ids for each iteration
     protected $entolledusersids;
+    // array of evento person ids that had a state not included in enrolstateids for each iteration
+    protected $failedstateeventopersonids;
     // roleid for the teacher enrolment
     protected $eteacherroleid;
     // roleid for the student enrolment
@@ -253,28 +255,38 @@ class enrol_evento_user_sync{
                     // Suspend users that are already enrolled in moodle, but not anymore in evento.
                     // Get moodle enrolments.
                     $allenrolledusers = array();
-                    $allenrolledusers = $DB->get_records('user_enrolments', array('enrolid' => $ce->id, 'status' => ENROL_USER_ACTIVE), 'userid', 'userid');
+                    $allenrolledusers = $DB->get_records('user_enrolments', array('enrolid' => $ce->id));
                     if (!empty($allenrolledusers)) {
                         // Suspend only, if there are enrolments in evento. Or there are teachers in the module.
                         if (!empty($enrolments) || !empty($eventteachers)) {
-
                             foreach ($allenrolledusers as $enrolleduser) {
                                 try {
                                     // Check, if the user is not enrolled by this task.
                                     if (!in_array($enrolleduser->userid, $this->entolledusersids)) {
-                                        // Workaround for if evento id for a user changed in evento but not yet in the Active Directory.
-                                        // Not suspending users, if there is no AD account available, there might be a data inconsistency,
-                                        // This will still suspend disabled accounts.
-                                        $aduser = to_array($this->get_ad_user($this->get_eventoid_by_userid($enrolleduser->userid)));
-                                        if ((!empty($aduser)) && (count($aduser) >= 1)) {
-                                            // Suspend User of available AD account.
+                                        $eventoid = $this->get_eventoid_by_userid($enrolleduser->userid);
+                                        // Check if the user is only enrolled in moodle but not in evento
+                                        // By checking if it was in the evento enrolments but had a bad status
+                                        if (!in_array($eventoid, $this->failedstateeventopersonids)) {
+                                            // delete user_enrolment
+                                            $this->plugin->unenrol_user($instance, $enrolleduser->userid);
+                                            $this->trace->output("removing user {$enrolleduser->userid} from course {$instance->courseid}", 1);
+                                            continue;
+                                        } 
+                                        
+                                        // Check if the user_enrolment has a status of ENROL_USER_ACTIVE
+                                        if ($enrolleduser->status === '0') {
+                                            // Get the AD account (Active Directory)
+                                            $aduser = to_array($this->get_ad_user($this->get_eventoid_by_userid($enrolleduser->userid)));
+                                            // Warning for if evento id for a user changed in evento but not yet in the Active Directory.
+                                            // There is a warning, if there is no AD account available, there might be a data inconsistency,
+                                            // This will still suspend disabled accounts.
                                             $this->plugin->update_user_enrol($instance, $enrolleduser->userid, ENROL_USER_SUSPENDED);
-                                            $this->trace->output("suspending expired user {$enrolleduser->userid} in course {$instance->courseid}", 1);
-                                        } else {
-                                            $this->trace->output("warning: not suspending expired user {$enrolleduser->userid} in course {$instance->courseid} " .
-                                                                "because no response of the Ad Service for this user", 1);
+                                            $this->trace->output(((!empty($aduser)) && (count($aduser) >= 1)) ?
+                                                                "suspending expired user {$enrolleduser->userid} in course {$instance->courseid}" :
+                                                                "warning: expired user {$enrolleduser->userid} in course {$instance->courseid} " .
+                                                                "was suspended, there might be a data inconsistency because no response of the Ad Service for this user", 1);
                                         }
-                                    }
+                                    } 
                                 } catch (Exception $ex) {
                                     debugging("Error durring suspending of user with id: {$enrolleduser->userid}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                             . " aborted with error: ". $ex->getMessage());
@@ -366,6 +378,9 @@ class enrol_evento_user_sync{
             $this->plugin->enrol_user($instance, $u->id, $this->studentroleid, $this->timestart, $this->timeend, ENROL_USER_ACTIVE);
             $this->entolledusersids[] = $u->id;
             $this->trace->output("enroling user {$u->id} in course {$instance->courseid} as a student", 1);
+        } else {
+            // collect evento enrolments that failed enrolmentstate test
+            $this->failedstateeventopersonids[] = $eventopersonid;
         }
     }
 
