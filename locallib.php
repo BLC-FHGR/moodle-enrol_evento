@@ -99,6 +99,17 @@ class enrol_evento_user_sync{
                 return 2;
             }
 
+            // Check if the setting for single course execution is active
+            // Evento Settings
+            if ($this->config->taskmodify) {
+                $courseid = $this->config->taskmodifier;
+                $this->trace->output('!!!Warning you chose in the evento settings to sync only the course with the id: ' . $courseid . '!!!');
+                if (!$DB->record_exists("course", ["id" => $courseid])) {
+                    $this->trace->output('No course with id: ' . $courseid . ' found...');
+                    return 2;
+                }
+            }
+
             // Unfortunately this may take a long time, execution can be interrupted safely here.
             core_php_time_limit::raise();
             raise_memory_limit(MEMORY_HUGE);
@@ -164,20 +175,20 @@ class enrol_evento_user_sync{
                     // Array of ids of active enrolled users.
                     $this->entolledusersids = array();
 
-                    $event = $this->eventoservice->get_event_by_number($anlassnbr);
+                    $event = (array)$this->eventoservice->get_event_by_number($anlassnbr);
                     if (empty($event)) {
                         debugging("No Evento event found for idnumber: {$anlassnbr}", DEBUG_DEVELOPER);
                         continue;
-                    } elseif (count($event)>1){
+                    } elseif (count($event)>1 && !array_key_exists("anlassNummer", $event)){
                         //Remove the incorrect event entries, if there are multiple events.
                         foreach ($event as $key => $singleevent){
-                            if($anlassnbr != $singleevent->anlassNummer){ unset($event[$key]); }
+                            if($anlassnbr != $singleevent["anlassNummer"]){ unset($event[$key]); }
                         }
                         $event = array_pop($event);
                     }
 
                     // Get event participants enrolments.
-                    $enrolments = $this->eventoservice->get_enrolments_by_eventid($event->idAnlass);
+                    $enrolments = $this->eventoservice->get_enrolments_by_eventid($event["idAnlass"]);
                     $enrolments = to_array($enrolments);
 
                     // Enrol students.
@@ -194,22 +205,22 @@ class enrol_evento_user_sync{
                                 return 1;
                             }
                         } catch (Exception $ex) {
-                            debugging("Enrolment sync of user evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                            debugging("Enrolment sync of user (student) evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                     . " aborted with error: ". $ex->getMessage());
-                            $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                            $this->trace->output("...user (student) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                         } catch (Throwable $ex) {
-                            debugging("Enrolment sync of user evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                            debugging("Enrolment sync of user (student) evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                     . " aborted with error: ". $ex->getMessage());
-                            $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                            $this->trace->output("...user (student) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                . " with evento personid: {$ee->idPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                         }
                     }
 
                     // Enrol teachers.
                     $eventteachers = array();
-                    if (isset($event->array_EventoAnlassLeitung)) {
-                        $eventteachers = to_array($event->array_EventoAnlassLeitung);
+                    if (isset($event["array_EventoAnlassLeitung"])) {	
+                        $eventteachers = to_array($event["array_EventoAnlassLeitung"]);
                     }
                     // Enrol teachers allowed?
                     if ($instance->customint1 == 1 || is_null($instance->customint1)) {
@@ -226,15 +237,15 @@ class enrol_evento_user_sync{
                                     return 1;
                                 }
                             } catch (Exception $ex) {
-                                debugging("Enrolemnt sync of user evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                                debugging("Enrolemnt sync of user (teacher) evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                         . " aborted with error: ". $ex->getMessage());
-                                $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                                $this->trace->output("...user (teacher) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                             } catch (Throwable $ex) {
-                                debugging("Enrolemnt sync of user evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
+                                debugging("Enrolemnt sync of user (teacher) evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}"
                                         . " aborted with error: ". $ex->getMessage());
-                                $this->trace->output("...user enrolment synchronisation aborted unexpected during sync of enrolment"
-                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
+                                $this->trace->output("...user (teacher) enrolment synchronisation aborted unexpected because of an Organizational Unit problem in AD (Active Directory) during sync of enrolment"
+                                                    . " with evento personid: {$teacher->anlassLtgIdPerson}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid};");
                             }
                         }
                     }
@@ -276,10 +287,10 @@ class enrol_evento_user_sync{
                                                         . " with userid: {$enrolleduser->userid}; eventnr.:{$anlassnbr}; courseid: {$ce->courseid}");
                                 }
                             }
-                        } else {
-                            debugging("not processing suspending, because no evento enrolments gotten for evento.idAnlass: {$event->idAnlass}; courseid: {$ce->courseid}");
-                            $this->trace->output("...not processing suspending, because no evento enrollments gotten for"
-                                            . " evento.idAnlass: {$event->idAnlass}; courseid: {$ce->courseid}");
+                        } else {	
+                            debugging("not processing suspending, because no evento enrolments gotten for evento.idAnlass: {$event["idAnlass"]}; courseid: {$ce->courseid}");	
+                            $this->trace->output("...not processing suspending, because no evento enrollments gotten for"	
+                                            . " evento.idAnlass: {$event["idAnlass"]}; courseid: {$ce->courseid}");	
                         }
                     }
 

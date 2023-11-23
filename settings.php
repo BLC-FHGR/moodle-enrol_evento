@@ -44,4 +44,16 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('enrol_evento/enrolteachers',
         get_string('enrolteachers', 'enrol_evento'),
         get_string('enrolteachers_help', 'enrol_evento'), 1));
+
+    // --- enrol task modifier --------------------------------------------------------------------------------
+    $settings->add(new admin_setting_heading('enrol_evento_task_modifier',
+        get_string('enrolmodifytask', 'enrol_evento'), get_string('enrolmodifytask_desc', 'enrol_evento')));
+
+    $settings->add(new admin_setting_configcheckbox('enrol_evento/taskmodify',
+        get_string('modifytask', 'enrol_evento'),
+        get_string('modifytask_help', 'enrol_evento'), 0));
+
+    $settings->add(new admin_setting_configtext('enrol_evento/taskmodifier',
+        new lang_string('courseid', 'enrol_evento'), new lang_string('courseid_desc', 'enrol_evento'), '', PARAM_TEXT));
+
 }
