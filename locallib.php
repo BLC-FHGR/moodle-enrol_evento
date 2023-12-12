@@ -56,7 +56,7 @@ class enrol_evento_user_sync{
     // array of enrolled user ids for each iteration
     protected $entolledusersids;
     // array of evento person ids that had a state not included in enrolstateids for each iteration
-    protected $failedstateeventopersonids;
+    protected $failedstateeventopersonids = array();
     // roleid for the teacher enrolment
     protected $eteacherroleid;
     // roleid for the student enrolment
