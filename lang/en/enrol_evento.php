@@ -52,3 +52,6 @@ $string['modifytask'] = 'Apply task to single course only';
 $string['modifytask_help'] = 'Only executes enrol for the course with the ID specified bellow';
 $string['courseid'] = 'Course-ID';
 $string['courseid_desc'] = 'Moodle Course-ID for the course where the enrollments should happen';
+$string['invalidEventNumber'] = 'invalid event number';
+$string['noEventNumber'] = 'please enter an event number';
+$string['incompleteEventNumber'] = 'please enter the whole event number';

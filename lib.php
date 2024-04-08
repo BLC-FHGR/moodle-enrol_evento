@@ -563,12 +563,34 @@ class enrol_evento_plugin extends enrol_plugin {
      *         or an empty array if everything is OK.
      * @return void
      */
-    public function edit_instance_validation($data, $files, $instance, $context) {
-        $errors = array();
+   
+     public function edit_instance_validation($data, $files, $instance, $context) {
+        $errors = [];
 
-        // Todo settings validation.
+        $number = $data['customtext1'];
 
+        $eventoservice = new local_evento_evento_service();
+        
+        if ($number == null || $number == " ") {
+            return array('customtext1' => get_string('noEventNumber', 'enrol_evento'));
+        } else {
+            $eventidselect = $eventoservice->get_event_by_number($number);
+            
+            if ($eventidselect != null) {
+
+                if (is_array($eventidselect)) {
+                    return array('customtext1' => get_string('incompleteEventNumber', 'enrol_evento'));
+                } else{
+                    if ($number == $eventidselect->anlassNummer) {
+                        return $errors;
+                    } else {
+                        return array('customtext1' => get_string('invalidEventNumber', 'enrol_evento'));
+                    }
+                }
+            } else {
+                return array('customtext1' => get_string('invalidEventNumber', 'enrol_evento'));
+            }
+        }
         return $errors;
     }
-
 }

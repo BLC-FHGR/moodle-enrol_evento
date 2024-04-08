@@ -52,3 +52,6 @@ $string['modifytask'] = 'Einschreibungen nur auf einen Kurs anwenden';
 $string['modifytask_help'] = 'Führt die Einschreibungen nur für die unten genannte Kurs-ID aus';
 $string['courseid'] = 'Kurs-ID';
 $string['courseid_desc'] = 'Moodle Kurs-ID für den Kurs in dem die Einschreibungen statt finden sollen';
+$string['invalidEventNumber'] = 'ungültige Anlassnummer';
+$string['noEventNumber'] = 'bitte Anlassnummer angeben';
+$string['incompleteEventNumber'] = 'bitte vollständige Anlassnummer angeben';
