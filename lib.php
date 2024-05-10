@@ -574,14 +574,19 @@ class enrol_evento_plugin extends enrol_plugin {
         if ($number == null || $number == " ") {
             return array('customtext1' => get_string('noEventNumber', 'enrol_evento'));
         } else {
-            $eventidselect = $eventoservice->get_event_by_number($number);
+            $limitationfilter2 = new local_evento_limitationfilter2();
+            $eventoanlassfilter = new local_evento_eventoanlassfilter();
+
+            $limitationfilter2->themaxresultvalue = 10;
+            $eventoanlassfilter->anlassnummer = $number . '%';
+    
+            $eventidselect = local_evento_evento_service::to_array($eventoservice->get_events_by_filter($eventoanlassfilter, $limitationfilter2));
             
             if ($eventidselect != null) {
-
-                if (is_array($eventidselect)) {
+                if (count($eventidselect) > 1) {
                     return array('customtext1' => get_string('incompleteEventNumber', 'enrol_evento'));
                 } else{
-                    if ($number == $eventidselect->anlassNummer) {
+                    if ($number == $eventidselect[0]->anlassNummer) {
                         return $errors;
                     } else {
                         return array('customtext1' => get_string('invalidEventNumber', 'enrol_evento'));
